@@ -14,9 +14,9 @@ public interface WardRepository extends JpaRepository<Ward, UUID> {
     // The key PostGIS query — finds which ward a GPS point falls inside
     @Query(value = """
         SELECT * FROM wards
-        WHERE ST_Within(
-            ST_SetSRID(ST_Point(:lng, :lat), 4326),
-            boundary
+        WHERE ST_Covers(
+            boundary,
+            ST_SetSRID(ST_Point(:lng, :lat), 4326) :: geography
         ) LIMIT 1
         """, nativeQuery = true)
     Optional<Ward> findWardContainingPoint(
