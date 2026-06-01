@@ -3,8 +3,6 @@
 A full-stack civic complaint resolution platform for Indian municipalities.
 Citizens file geo-tagged complaints, officials respond, and SLA timers ensure accountability.
 
-![GrievanceOS Architecture](./grievance-backend/architecture.png)
-
 ## 🔗 Repositories
 
 | Part | Stack | Folder |
