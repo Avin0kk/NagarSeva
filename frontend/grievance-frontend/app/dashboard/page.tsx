@@ -104,7 +104,18 @@ export default function DashboardPage() {
                     <span>{new Date(c.createdAt).toLocaleDateString('en-IN')}</span>
                   </div>
                 </div>
-                <Badge variant="outline" className="text-xs">{c.wardId ? 'Ward assigned' : 'Unassigned'}</Badge>
+                <div className="flex flex-col items-end gap-1">
+                {c.wardName && (
+                  <Badge variant="outline" className="text-xs">{c.wardName}</Badge>
+                )}
+                {c.assignedOfficialName ? (
+                  <span className="text-xs text-neutral-500">
+                    👤 {c.assignedOfficialName}
+                  </span>
+                ) : (
+                  <span className="text-xs text-neutral-400">Unassigned</span>
+                )}
+              </div>
               </CardContent>
             </Card>
           ))}

@@ -25,7 +25,17 @@ export default function LoginPage() {
       const res = await api.post('/auth/login', { email, password });
       localStorage.setItem('token', res.data.accessToken);
       localStorage.setItem('refreshToken', res.data.refreshToken);
-      router.push('/dashboard');
+
+      const payload = JSON.parse(atob(res.data.accessToken.split('.')[1]));
+      const role = payload.role;
+
+      if(role === 'ADMIN') {
+        router.push('/admin');
+      }
+      else if(role === 'OFFICIAL') {
+        router.push('/official');
+      }
+      else router.push('/dashboard');
     } catch (e: any) {
       setError(e.response?.data?.error || 'Invalid email or password');
     } finally {
