@@ -1,5 +1,6 @@
 package com.grievanceos.grievance_backend.dto.response;
 
+import com.grievanceos.grievance_backend.enums.ComplaintCategory;
 import com.grievanceos.grievance_backend.enums.ComplaintStatus;
 import com.grievanceos.grievance_backend.enums.Priority;
 import com.grievanceos.grievance_backend.model.Ward;
@@ -21,11 +22,13 @@ public class ComplaintResponse {
     private Priority priority;
     private ZonedDateTime createdAt;
     private UUID wardId;
+    private ComplaintCategory category;
 
     private Double latitude;
     private Double longitude;
     private ZonedDateTime slaDeadline;
-    //private Addre
+    private String addressText;
 
-
+    private String assignedOfficialName;
+    private String wardName;
 }
