@@ -6,6 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageSquareWarning, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+const PinSelector = dynamic(() => import('@/components/ui/PinSelector'), 
+                            { ssr: false }
+                          );
+                        
 
 export default function NewComplaintPage() {
   const router = useRouter();
@@ -20,6 +26,7 @@ export default function NewComplaintPage() {
   const [error, setError] = useState('');
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [showMap,setShowMap] = useState(false); 
 
   const getLocation = () => {
 
@@ -159,21 +166,32 @@ export default function NewComplaintPage() {
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium">GPS Location</label>
               <div className="flex gap-2 items-center">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={getLocation}
-                  className="text-sm"
-                >
+                <Button type="button" variant="outline" onClick={getLocation}>
                   📍 Use My Location
                 </Button>
-
-                {latitude ? <p>Lat: {latitude}</p> : null}
-                {longitude ? <p>Lng: {longitude}</p> : null}
-                {/* YOUR TASK 6 — show latitude and longitude if they exist
-                    hint: use a ternary — latitude ? <p>Lat: {latitude}...</p> : null */}
+                <Button type="button" variant="outline" onClick={() => setShowMap(!showMap)}>
+                  Select on Map
+                </Button>
               </div>
+              
+              {/* Move map OUTSIDE the flex row */}
+              {showMap && (
+                <div className="mt-2 rounded-lg overflow-hidden border border-neutral-200">
+                  <PinSelector onSelect={(lat, lng) => {
+                    setLatitude(lat);
+                    setLongitude(lng);
+                    setShowMap(false); // hide map after selecting
+                  }} />
+                </div>
+              )}
+
+              {latitude && longitude && (
+                <p className="text-sm text-neutral-600 mt-1">
+                  📍 {latitude.toFixed(5)}, {longitude.toFixed(5)}
+                </p>
+              )}
             </div>
+
 
             <Button
               onClick={handleSubmit}
