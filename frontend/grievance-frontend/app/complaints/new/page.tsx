@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageSquareWarning, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import ThemeToggle from "@/components/ThemeToggle";
 
 const PinSelector = dynamic(() => import('@/components/ui/PinSelector'), 
                             { ssr: false }
@@ -67,26 +68,27 @@ export default function NewComplaintPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Navbar */}
-      <header className="bg-white border-b border-neutral-200 px-8 py-4 flex justify-between items-center">
+      <header className="bg-card border-b border-border px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="size-8 rounded-lg bg-neutral-900 text-white flex justify-center items-center">
             <MessageSquareWarning className="size-4" />
           </div>
           <span className="font-bold">GrievanceOS</span>
         </div>
+        <ThemeToggle />
       </header>
 
       <main className="max-w-2xl mx-auto p-8">
-        <Link href="/dashboard" className="flex items-center gap-1 text-sm text-neutral-500 hover:text-neutral-900 mb-6">
+        <Link href="/dashboard" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="size-4" /> Back to dashboard
         </Link>
 
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">File a Complaint</CardTitle>
-            <p className="text-neutral-500 text-sm">Report a civic issue in your area</p>
+            <p className="text-muted-foreground text-sm">Report a civic issue in your area</p>
           </CardHeader>
           <CardContent className="flex flex-col gap-5">
 
@@ -98,24 +100,24 @@ export default function NewComplaintPage() {
 
             {/* Title field */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium">Title</label>
+              <label className="text-sm font-medium text-muted-foreground">Title</label>
               <input
                 placeholder="e.g. Large pothole near bus stop"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70"
               />
             </div>
 
             {/* Description field */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium text-muted-foreground">Description</label>
               <textarea
                 rows={4}
                 placeholder="Provide more details about the issue"
                 value={description}
                 onChange={e => setDescription(e.target.value)}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70"
               />
             </div>
 
@@ -125,7 +127,7 @@ export default function NewComplaintPage() {
               <select
                 value={category}
                 onChange={e => setCategory(e.target.value)}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70"
               >
                 <option value="POTHOLE">Pothole</option>
                 <option value="WATER">Water</option>
@@ -138,11 +140,11 @@ export default function NewComplaintPage() {
 
             {/* Priority dropdown */}
             <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium">Priority</label>
+                <label className="text-sm font-medium text-muted-foreground">Priority</label>
                 <select
                     value={priority}
                     onChange={e => setPriority(e.target.value)}
-                    className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900"
+                    className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70"
                     >
                     <option value="LOW">Low</option>
                     <option value="MEDIUM">Medium</option>
@@ -153,12 +155,12 @@ export default function NewComplaintPage() {
 
             {/* Address */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium">Address</label>
+              <label className="text-sm font-medium text-muted-foreground">Address</label>
               <input
                 placeholder="e.g. Near main market gate, Sector 5"
                 value={addressText}
                 onChange={e => setAddressText(e.target.value)}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70"
               />
             </div>
 
@@ -176,7 +178,7 @@ export default function NewComplaintPage() {
               
               {/* Move map OUTSIDE the flex row */}
               {showMap && (
-                <div className="mt-2 rounded-lg overflow-hidden border border-neutral-200">
+                <div className="mt-2 rounded-lg overflow-hidden border border-border">
                   <PinSelector onSelect={(lat, lng) => {
                     setLatitude(lat);
                     setLongitude(lng);
@@ -186,7 +188,7 @@ export default function NewComplaintPage() {
               )}
 
               {latitude && longitude && (
-                <p className="text-sm text-neutral-600 mt-1">
+                <p className="text-sm text-muted-foreground/70 mt-1">
                   📍 {latitude.toFixed(5)}, {longitude.toFixed(5)}
                 </p>
               )}
@@ -196,7 +198,7 @@ export default function NewComplaintPage() {
             <Button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full bg-neutral-900 text-white mt-2"
+              className="w-full bg-primary text-primary-foreground mt-2"
             >
               {loading ? 'Filing complaint...' : 'Submit Complaint'}
             </Button>

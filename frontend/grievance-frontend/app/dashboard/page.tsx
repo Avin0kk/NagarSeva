@@ -7,13 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import ThemeToggle from "@/components/ThemeToggle";
 
 const statusColors: Record<string, string> = {
-  OPEN: 'bg-blue-100 text-blue-700',
-  IN_PROGRESS: 'bg-yellow-100 text-yellow-700',
-  ESCALATED: 'bg-red-100 text-red-700',
-  RESOLVED: 'bg-green-100 text-green-700',
-  CLOSED: 'bg-neutral-100 text-neutral-700',
+  OPEN: 'bg-blue-100 text-blue-700 dark:bg-blue-200/20 dark:text-blue-200',
+  IN_PROGRESS: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-200/20 dark:text-yellow-200',
+  ESCALATED: 'bg-red-100 text-red-700 dark:bg-red-200/20 dark:text-red-200',
+  RESOLVED: 'bg-green-100 text-green-700 dark:bg-green-200/20 dark:text-green-200',
+  CLOSED: 'bg-muted text-muted-foreground',
 };
 
 export default function DashboardPage() {
@@ -37,9 +38,9 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-background">
       {/* Navbar */}
-      <header className="bg-white border-b border-neutral-200 px-8 py-4 flex justify-between items-center">
+      <header className="bg-card border-b border-border px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="size-8 rounded-lg bg-neutral-900 text-white flex justify-center items-center">
             <MessageSquareWarning className="size-4" />
@@ -59,23 +60,24 @@ export default function DashboardPage() {
             <LogOut className="size-4" />
           </Button>
         </div>
+        <ThemeToggle />
       </header>
 
       <main className="max-w-4xl mx-auto p-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold">My Complaints</h1>
-          <p className="text-neutral-500 text-sm mt-1">Track all your filed complaints</p>
+          <p className="text-muted-foreground text-sm mt-1">Track all your filed complaints</p>
         </div>
 
         {loading && (
-          <p className="text-neutral-500 text-sm">Loading complaints...</p>
+          <p className="text-muted-foreground text-sm">Loading complaints...</p>
         )}
 
         {!loading && complaints.length === 0 && (
           <Card className="text-center py-16">
             <CardContent className="flex flex-col items-center gap-4">
-              <MessageSquareWarning className="size-12 text-neutral-300" />
-              <p className="text-neutral-500">No complaints filed yet</p>
+              <MessageSquareWarning className="size-12 text-card-foreground/50" />
+              <p className="text-muted-foreground">No complaints filed yet</p>
               <Link href="/complaints/new">
                 <Button className="bg-neutral-900 text-white gap-1">
                   <Plus className="size-4" /> File your first complaint
@@ -96,7 +98,7 @@ export default function DashboardPage() {
                       {c.status}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-neutral-500">
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span>{c.category}</span>
                     <span>·</span>
                     <span>{c.priority} priority</span>
@@ -109,11 +111,11 @@ export default function DashboardPage() {
                   <Badge variant="outline" className="text-xs">{c.wardName}</Badge>
                 )}
                 {c.assignedOfficialName ? (
-                  <span className="text-xs text-neutral-500">
+                  <span className="text-xs text-muted-foreground">
                     👤 {c.assignedOfficialName}
                   </span>
                 ) : (
-                  <span className="text-xs text-neutral-400">Unassigned</span>
+                  <span className="text-xs text-muted-foreground/70">Unassigned</span>
                 )}
               </div>
               </CardContent>

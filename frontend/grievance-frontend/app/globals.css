@@ -122,9 +122,16 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
   html {
+    color-scheme: light dark;
     @apply font-sans;
+  }
+
+  ::selection {
+    background: rgba(59, 130, 246, 0.3);
+    color: inherit;
   }
 }

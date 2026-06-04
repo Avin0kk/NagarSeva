@@ -3,13 +3,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import ThemeToggle from '@/components/ThemeToggle';
 import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="bg-white text-neutral-950 min-h-screen">
+    <div className="bg-background text-foreground min-h-screen">
       {/* Navbar */}
-      <header className="border-b border-neutral-200 w-full">
+      <header className="border-b border-border w-full">
         <div className="flex px-12 py-4 justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="size-9 rounded-xl bg-neutral-900 text-white flex justify-center items-center">
@@ -18,9 +19,9 @@ export default function Home() {
             <span className="font-bold text-lg">GrievanceOS</span>
           </div>
           <nav className="flex items-center gap-8">
-            <a href="#features" className="text-sm text-neutral-500 hover:text-neutral-900">Features</a>
-            <a href="#how" className="text-sm text-neutral-500 hover:text-neutral-900">How It Works</a>
-            <a href="#map" className="text-sm text-neutral-500 hover:text-neutral-900">Live Map</a>
+            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground">Features</a>
+            <a href="#how" className="text-sm text-muted-foreground hover:text-foreground">How It Works</a>
+            <a href="#map" className="text-sm text-muted-foreground hover:text-foreground">Live Map</a>
           </nav>
           <div className="flex items-center gap-2">
             <Link href="/login">
@@ -29,6 +30,7 @@ export default function Home() {
             <Link href="/register">
               <Button className="bg-neutral-900 text-white text-sm">Get Started</Button>
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -42,9 +44,9 @@ export default function Home() {
             </Badge>
             <h1 className="font-bold text-5xl tracking-tight leading-tight">
               Report civic issues,<br />
-              <span className="text-neutral-500">get them resolved.</span>
+              <span className="text-muted-foreground">get them resolved.</span>
             </h1>
-            <p className="max-w-xl text-neutral-500 text-lg">
+            <p className="max-w-xl text-muted-foreground text-lg">
               GrievanceOS lets citizens file geo-tagged complaints about potholes, power cuts, garbage and more. Officials respond. SLA timers ensure accountability.
             </p>
             <div className="flex items-center gap-4">
@@ -62,23 +64,23 @@ export default function Home() {
             <div className="flex pt-2 items-center gap-8">
               <div className="flex flex-col">
                 <span className="font-bold text-2xl">48h</span>
-                <span className="text-neutral-500 text-sm">SLA guarantee</span>
+                <span className="text-muted-foreground text-sm">SLA guarantee</span>
               </div>
               <Separator orientation="vertical" className="h-10" />
               <div className="flex flex-col">
                 <span className="font-bold text-2xl">Live</span>
-                <span className="text-neutral-500 text-sm">Map tracking</span>
+                <span className="text-muted-foreground text-sm">Map tracking</span>
               </div>
               <Separator orientation="vertical" className="h-10" />
               <div className="flex flex-col">
                 <span className="font-bold text-2xl">Auto</span>
-                <span className="text-neutral-500 text-sm">Escalation</span>
+                <span className="text-muted-foreground text-sm">Escalation</span>
               </div>
             </div>
           </div>
           <div className="relative flex-1">
-            <div className="rounded-3xl border border-neutral-200 overflow-hidden bg-neutral-50 h-80 flex items-center justify-center">
-              <div className="text-center text-neutral-400">
+            <div className="rounded-3xl border border-border overflow-hidden bg-muted/70 h-80 flex items-center justify-center">
+              <div className="text-center text-muted-foreground/80">
                 <MessageSquareWarning className="size-16 mx-auto mb-3" />
                 <p className="font-medium">Live complaint map</p>
                 <p className="text-sm">Geo-tagged civic issues across your city</p>
@@ -91,7 +93,7 @@ export default function Home() {
                 </div>
                 <div className="flex flex-col">
                   <span className="font-semibold text-sm">Pothole resolved</span>
-                  <span className="text-neutral-500 text-xs">Ward 1 · 2 hours ago</span>
+                  <span className="text-muted-foreground text-xs">Ward 1 · 2 hours ago</span>
                 </div>
               </CardContent>
             </Card>
@@ -103,7 +105,7 @@ export default function Home() {
           <div className="text-center flex flex-col items-center gap-2">
             <Badge variant="secondary" className="rounded-full px-3 py-1">Features</Badge>
             <h2 className="font-bold text-3xl tracking-tight">Built for civic accountability</h2>
-            <p className="max-w-2xl text-neutral-500">Every feature designed to make government services more transparent and responsive.</p>
+            <p className="max-w-2xl text-muted-foreground">Every feature designed to make government services more transparent and responsive.</p>
           </div>
           <div className="grid grid-cols-3 gap-6">
             {[
@@ -116,13 +118,13 @@ export default function Home() {
             ].map(({ icon: Icon, title, desc }) => (
               <Card key={title} className="p-6 gap-4">
                 <CardHeader className="p-0 gap-2">
-                  <div className="size-11 rounded-xl bg-neutral-100 text-neutral-900 flex justify-center items-center">
+                  <div className="size-11 rounded-xl bg-muted text-foreground flex justify-center items-center">
                     <Icon className="size-5" />
                   </div>
                   <CardTitle className="text-lg">{title}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <p className="text-neutral-500 text-sm">{desc}</p>
+                  <p className="text-muted-foreground text-sm">{desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -141,10 +143,10 @@ export default function Home() {
               { n: '2', title: 'Official responds', desc: 'The ward official sees it in their queue sorted by SLA urgency and updates the status.' },
               { n: '3', title: 'Get it resolved', desc: 'You get a live notification. If the SLA is breached, it escalates automatically.' },
             ].map(({ n, title, desc }) => (
-              <div key={n} className="rounded-2xl border border-neutral-200 flex p-6 flex-col gap-3">
+              <div key={n} className="rounded-2xl border border-border flex p-6 flex-col gap-3">
                 <div className="size-9 font-bold rounded-full bg-neutral-900 text-white text-sm flex justify-center items-center">{n}</div>
                 <h3 className="font-semibold text-lg">{title}</h3>
-                <p className="text-neutral-500 text-sm">{desc}</p>
+                <p className="text-muted-foreground text-sm">{desc}</p>
               </div>
             ))}
           </div>
@@ -175,7 +177,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-neutral-200 px-12 py-8 mt-12">
+      <footer className="border-t border-border px-12 py-8 mt-12">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="size-8 rounded-lg bg-neutral-900 text-white flex justify-center items-center">
@@ -183,10 +185,10 @@ export default function Home() {
             </div>
             <span className="font-bold">GrievanceOS</span>
           </div>
-          <p className="text-neutral-500 text-sm">Built with Spring Boot · PostgreSQL + PostGIS · Redis · Next.js</p>
+          <p className="text-muted-foreground text-sm">Built with Spring Boot · PostgreSQL + PostGIS · Redis · Next.js</p>
         </div>
         <Separator className="my-6" />
-        <p className="text-center text-neutral-500 text-xs">© 2026 GrievanceOS. Civic tech for a better India.</p>
+        <p className="text-center text-muted-foreground text-xs">© 2026 GrievanceOS. Civic tech for a better India.</p>
       </footer>
     </div>
   );

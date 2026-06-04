@@ -6,6 +6,7 @@ import api from '@/lib/axios';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageSquareWarning, Phone } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -43,8 +44,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+      <div className="w-full max-w-md relative">
 
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -54,10 +55,10 @@ export default function RegisterPage() {
           <span className="font-bold text-xl">GrievanceOS</span>
         </div>
 
-        <Card className="shadow-sm">
+        <Card className="shadow-sm bg-card">
           <CardHeader className="text-center pb-2">
             <CardTitle className="text-2xl font-bold">Create account</CardTitle>
-            <p className="text-neutral-500 text-sm mt-1">Join GrievanceOS today</p>
+            <p className="text-muted-foreground text-sm mt-1">Join GrievanceOS today</p>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 pt-4">
 
@@ -68,71 +69,71 @@ export default function RegisterPage() {
             )}
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-neutral-700">Fullname</label>
+              <label className="text-sm font-medium text-muted-foreground">Fullname</label>
               <input
                 type="text"
                 placeholder="fullName"
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleRegister()}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-neutral-700">Email</label>
+              <label className="text-sm font-medium text-muted-foreground">Email</label>
               <input
                 type="email"
                 placeholder="you@example.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleRegister()}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-neutral-700">Password</label>
+              <label className="text-sm font-medium text-muted-foreground">Password</label>
               <input
                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleRegister()}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-neutral-700">Confirm Password</label>
+              <label className="text-sm font-medium text-muted-foreground">Confirm Password</label>
               <input
                 type="password"
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleRegister()}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-neutral-700">Phone Number</label>
+              <label className="text-sm font-medium text-muted-foreground">Phone Number</label>
               <input
                 type="tel"
                 placeholder="Phone Number"
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleRegister()}
-                className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-neutral-700">Role</label>
+            <label className="text-sm font-medium text-muted-foreground">Role</label>
             <select
             value={role}
              onChange={e => setRole(e.target.value)}
-             className="border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-neutral-900"
+             className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70"
             >
             <option value="CITIZEN">Citizen</option>
             <option value="OFFICIAL">Official</option>
@@ -142,14 +143,14 @@ export default function RegisterPage() {
             <Button
               onClick={handleRegister}
               disabled={loading}
-              className="w-full bg-neutral-900 text-white py-2.5 mt-2"
+              className="w-full bg-primary text-primary-foreground py-2.5 mt-2"
             >
               {loading ? 'Registering...' : 'Register'}
             </Button>
 
-            <p className="text-center text-sm text-neutral-500">
+            <p className="text-center text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link href="/login" className="text-neutral-900 font-medium hover:underline">
+              <Link href="/login" className="text-foreground font-medium hover:underline">
                 Sign in
               </Link>
             </p>
@@ -157,9 +158,12 @@ export default function RegisterPage() {
           </CardContent>
         </Card>
 
-        <p className="text-center text-xs text-neutral-400 mt-6">
+        <p className="text-center text-xs text-muted-foreground/70 mt-6">
           <Link href="/" className="hover:underline">← Back to home</Link>
         </p>
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
 
       </div>
     </div>

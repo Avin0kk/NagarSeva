@@ -6,6 +6,7 @@ import { MessageSquareWarning, LogOut, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const statusColors: Record<string, string> = {
   OPEN: 'bg-blue-100 text-blue-700',
@@ -63,8 +64,8 @@ export default function OfficialPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="bg-white border-b border-neutral-200 px-8 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="bg-card border-b border-border px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="size-8 rounded-lg bg-neutral-900 text-white flex justify-center items-center">
             <MessageSquareWarning className="size-4" />
@@ -78,18 +79,19 @@ export default function OfficialPage() {
           <Button variant="ghost" size="sm" onClick={logout}>
             <LogOut className="size-4" />
           </Button>
+          <ThemeToggle />
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto p-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Complaint Queue</h1>
-          <p className="text-neutral-500 text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             Sorted by SLA urgency — resolve before deadline
           </p>
         </div>
 
-        {loading && <p className="text-neutral-500 text-sm">Loading queue...</p>}
+        {loading && <p className="text-muted-foreground text-sm">Loading queue...</p>}
 
         <div className="flex flex-col gap-4">
           {complaints.map((c: any) => (
@@ -108,7 +110,7 @@ export default function OfficialPage() {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-neutral-500 flex-wrap">
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                       <span>{c.category}</span>
                       <span>·</span>
                       <span>{c.priority} priority</span>
@@ -124,7 +126,7 @@ export default function OfficialPage() {
                       )}
                     </div>
                     {c.addressText && (
-                      <p className="text-xs text-neutral-400 mt-1">{c.addressText}</p>
+                      <p className="text-xs text-muted-foreground/70 mt-1">{c.addressText}</p>
                     )}
                   </div>
 
@@ -136,7 +138,7 @@ export default function OfficialPage() {
                           ...prev,
                           [c.id]: e.target.value
                         }))}
-                        className="border border-neutral-200 rounded-lg px-2 py-1.5 text-xs outline-none"
+                        className="border border-border rounded-lg bg-background px-2 py-1.5 text-xs text-foreground outline-none"
                       >
                         <option value="OPEN">Open</option>
                         <option value="IN_PROGRESS">In Progress</option>
@@ -147,7 +149,7 @@ export default function OfficialPage() {
                         size="sm"
                         disabled={updatingId === c.id}
                         onClick={() => updateStatus(c.id)}
-                        className="bg-neutral-900 text-white text-xs px-3"
+                        className="bg-primary text-primary-foreground text-xs px-3"
                       >
                         {updatingId === c.id ? 'Saving...' : 'Update'}
                       </Button>
