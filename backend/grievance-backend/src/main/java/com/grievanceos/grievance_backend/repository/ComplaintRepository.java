@@ -2,6 +2,7 @@ package com.grievanceos.grievance_backend.repository;
 
 import com.grievanceos.grievance_backend.model.Complaint;
 import com.grievanceos.grievance_backend.enums.ComplaintStatus;
+import com.grievanceos.grievance_backend.model.Ward;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -23,6 +25,9 @@ public interface ComplaintRepository extends JpaRepository<Complaint, UUID> {
     List<Complaint> findByStatus(ComplaintStatus status);
 
     List<Complaint> findByWardId(UUID wardId);
+
+    @Query(value = "SELECT * FROM wards w WHERE ST_Covers(w.boundary, ST_SetSRID(ST_Point(:lng, :lat), 4326)::geography) = true LIMIT 1", nativeQuery = true)
+    Optional<Ward> findWardContainingPoint(@Param("lat") Double latitude, @Param("lng") Double longitude);
 
     // All open complaints within X metres of a point — powers the map view
     @Query(value = """

@@ -7,6 +7,7 @@ import com.grievanceos.grievance_backend.dto.response.ComplaintResponse;
 import com.grievanceos.grievance_backend.dto.response.MapComplaintResponse;
 import com.grievanceos.grievance_backend.model.Complaint;
 import com.grievanceos.grievance_backend.model.User;
+import com.grievanceos.grievance_backend.model.Ward;
 import com.grievanceos.grievance_backend.repository.ComplaintRepository;
 import com.grievanceos.grievance_backend.repository.UserRepository;
 import com.grievanceos.grievance_backend.service.ComplaintService;
@@ -19,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -80,5 +82,17 @@ public class ComplaintController {
     public ResponseEntity<List<ComplaintResponse>> getOfficialQueue() {
         User official = getCurrentUser();
         return ResponseEntity.ok(complaintService.getOfficialQueue(official.getId(), official.getWardId()));
+    }
+
+    @GetMapping("/admin/all-complaints")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ComplaintResponse>> getAllComplaints() {
+        return ResponseEntity.ok(complaintService.getAllComplaints());
+    }
+
+    @GetMapping("/admin/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> getStats() {
+        return ResponseEntity.ok(complaintService.getAdminStats());
     }
 }

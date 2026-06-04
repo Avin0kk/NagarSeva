@@ -26,6 +26,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -194,5 +195,30 @@ public class ComplaintService {
         return complaints.stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    public List<ComplaintResponse> getAllComplaints() {
+       return complaintRepository.findAll()
+               .stream()
+               .map(this::mapToResponse)
+               .toList();
+    }
+
+    public Map<String, Object> getAdminStats() {
+        List<Complaint> all = complaintRepository.findAll();
+
+        long total = all.size();
+        long open = all.stream().filter(c -> c.getStatus() == ComplaintStatus.OPEN).count();
+        long inProgress = all.stream().filter(c -> c.getStatus() == ComplaintStatus.IN_PROGRESS).count();
+        long escalated = all.stream().filter(c -> c.getStatus() == ComplaintStatus.ESCALATED).count();
+        long resolved = all.stream().filter(c -> c.getStatus() == ComplaintStatus.RESOLVED).count();
+
+        return Map.of(
+                "total", total,
+                "open", open,
+                "inProgress", inProgress,
+                "escalated", escalated,
+                "resolved", resolved
+        );
     }
 }
