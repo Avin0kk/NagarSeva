@@ -20,7 +20,7 @@ export default function ThemeToggle() {
       }
       className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/70"
     >
-      {theme === "dark" ? "☀️ Light mode" : "🌙 Dark mode"}
+      {theme === "dark" ? "☀️" : "🌙"}
     </button>
   );
 }
