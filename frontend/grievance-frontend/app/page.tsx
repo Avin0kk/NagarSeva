@@ -1,3 +1,5 @@
+'use client';
+
 import { MessageSquareWarning, ArrowRight, PlayCircle, CheckCircle2, FileText, Route, Activity, BarChart3, ShieldCheck, Bell } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -5,6 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import ThemeToggle from '@/components/ThemeToggle';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+ const MapView = dynamic(() => import('@/components/Mapview'), { ssr: false });
 
 export default function Home() {
   return (
@@ -78,25 +83,12 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="relative flex-1">
-            <div className="rounded-3xl border border-border overflow-hidden bg-muted/70 h-80 flex items-center justify-center">
-              <div className="text-center text-muted-foreground/80">
-                <MessageSquareWarning className="size-16 mx-auto mb-3" />
-                <p className="font-medium">Live complaint map</p>
-                <p className="text-sm">Geo-tagged civic issues across your city</p>
-              </div>
+          <div className="flex flex-col gap-3 items-center">
+            <div className="rounded-3xl border border-border overflow-hidden bg-muted/70 h-96 w-96">
+              <MapView />
             </div>
-            <Card className="shadow-lg absolute -left-6 -bottom-6 p-4 w-56">
-              <CardContent className="flex p-0 items-center gap-3">
-                <div className="size-10 rounded-full bg-green-600 text-white flex justify-center items-center">
-                  <CheckCircle2 className="size-5" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold text-sm">Pothole resolved</span>
-                  <span className="text-muted-foreground text-xs">Ward 1 · 2 hours ago</span>
-                </div>
-              </CardContent>
-            </Card>
+            <p className="text-center text-muted-foreground text-sm font-medium">
+                📍 Live Complaint Map — Real-time geo-tagged issues across Delhi NCR</p>
           </div>
         </section>
 

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import ThemeToggle from "@/components/ThemeToggle";
 import stompClient from "@/lib/websocket";
+import { toast } from "sonner";
 
 const statusColors: Record<string, string> = {
   OPEN: 'bg-blue-100 text-blue-700 dark:bg-blue-200/20 dark:text-blue-200',
@@ -47,12 +48,15 @@ export default function DashboardPage() {
       (message) => {
         const notification = JSON.parse(message.body);
 
-        console.log(
-          "📢 User Notification:",
-          notification
-        );
+        // console.log(
+        //   "📢 User Notification:",
+        //   notification
+        // );
 
-        alert(notification.message);
+        toast(notification.title, {
+          description: notification.message,
+        });
+          
       }
     );
   };

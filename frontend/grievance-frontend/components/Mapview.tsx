@@ -47,6 +47,10 @@ export default function MapView() {
       .finally(() => setLoading(false));
   }, []);
 
+  if(loading) {
+    return <div className="w-full h-96 bg-blue-100">Loading...</div>;
+  }
+
   return (
     <div style={{ height: 'calc(100vh - 65px)', width: '100%', position: 'relative' }}>
       {loading && (
