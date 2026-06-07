@@ -157,7 +157,7 @@ public class ComplaintService {
         Complaint savedComplaint = complaintRepository.save(complaint);
 
         notificationService.sendComplaintUpdate(savedComplaint.getId().toString(),
-                "Complaint status changed from " + oldStatus + " to " + savedComplaint.getStatus());
+                "Complaint status changed from " + oldStatus + " to " + savedComplaint.getStatus() + " for the complaint: " + savedComplaint.getTitle());
 
         if (request.getChangedBy() != null) {
             StatusHistory history = StatusHistory.builder()

@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import ThemeToggle from "@/components/ThemeToggle";
+import stompClient from "@/lib/websocket";
 
 const statusColors: Record<string, string> = {
   OPEN: 'bg-blue-100 text-blue-700 dark:bg-blue-200/20 dark:text-blue-200',
@@ -36,6 +37,32 @@ export default function DashboardPage() {
     localStorage.removeItem('token');
     router.push('/login');
   };
+
+  useEffect(() => {
+  stompClient.onConnect = () => {
+    console.log("✅ User WebSocket Connected");
+
+    stompClient.subscribe(
+      "/topic/complaints",
+      (message) => {
+        const notification = JSON.parse(message.body);
+
+        console.log(
+          "📢 User Notification:",
+          notification
+        );
+
+        alert(notification.message);
+      }
+    );
+  };
+
+  stompClient.activate();
+
+  return () => {
+    stompClient.deactivate();
+  };
+}, []);
 
   return (
     <div className="min-h-screen bg-background">
