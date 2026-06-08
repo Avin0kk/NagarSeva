@@ -12,6 +12,7 @@ import com.grievanceos.grievance_backend.repository.ComplaintRepository;
 import com.grievanceos.grievance_backend.repository.UserRepository;
 import com.grievanceos.grievance_backend.service.ComplaintService;
 import com.grievanceos.grievance_backend.service.EmailService;
+import com.grievanceos.grievance_backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +33,7 @@ public class ComplaintController {
     private final ComplaintService complaintService;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final UserService userService;
 
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -107,6 +109,15 @@ public class ComplaintController {
     @GetMapping("/map/recent-resolved")
     public ResponseEntity<List<ComplaintResponse>> getRecentResolved() {
         return ResponseEntity.ok(complaintService.getRecentResolved());
+    }
+
+    @PostMapping("officials/update-location")
+    @PreAuthorize("hasRole('OFFICIAL')")
+    public ResponseEntity<String> updateOfficialLocation(@RequestParam Double latitude,
+                                                         @RequestParam Double longitude) {
+        User official = getCurrentUser();
+        userService.updateOfficialLocation(official.getId(), latitude, longitude);
+        return ResponseEntity.ok("Location Updated");
     }
 
 }

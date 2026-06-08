@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/test/**").permitAll()
-                                .requestMatchers("/complaints/map").permitAll()
+                                .requestMatchers("/complaints/map/**").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
 //                        .requestMatchers("/api/v1/complaints/map").permitAll()
 //                        .requestMatchers("/ws/**").permitAll()

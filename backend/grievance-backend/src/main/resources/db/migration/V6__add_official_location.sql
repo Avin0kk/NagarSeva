@@ -1,0 +1,2 @@
+ALTER TABLE users ADD COLUMN last_location POINT;
+ALTER TABLE users ADD COLUMN last_online_at  TIMESTAMP WITH TIME ZONE;

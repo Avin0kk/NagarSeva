@@ -16,6 +16,7 @@ import com.grievanceos.grievance_backend.repository.UserRepository;
 import com.grievanceos.grievance_backend.repository.WardRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -29,6 +30,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ComplaintService {
 
     private final ComplaintRepository complaintRepository;
@@ -40,52 +42,106 @@ public class ComplaintService {
 
     private final EmailService emailService;
 
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double R = 6371; // Earth's radius in km
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c * 1000; // to meters
+    }
+
     // single helper used everywhere
     private ComplaintResponse mapToResponse(Complaint c) {
         String wardName = null;
-        String officialName = null;
+        String assignedOfficialName = null;
 
+        // Get ward name if ward is assigned
         if (c.getWardId() != null) {
+            wardName = wardRepository.findById(c.getWardId())
+                    .map(Ward::getName)
+                    .orElse(null);
+        }
+
+        // Get official name - either directly assigned OR from ward escalation
+        if (c.getAssignedTo() != null) {
+            assignedOfficialName = userRepository.findById(c.getAssignedTo())
+                    .map(User::getFullName)
+                    .orElse(null);
+        } else if (c.getWardId() != null) {
             Ward ward = wardRepository.findById(c.getWardId()).orElse(null);
-            if (ward != null) {
-                wardName = ward.getName();
-                if (ward.getEscalationUserId() != null) {
-                    User official = userRepository.findById(ward.getEscalationUserId()).orElse(null);
-                    if (official != null) {
-                        officialName = official.getFullName();
-                    }
-                }
+            if (ward != null && ward.getEscalationUserId() != null) {
+                assignedOfficialName = userRepository.findById(ward.getEscalationUserId())
+                        .map(User::getFullName)
+                        .orElse(null);
             }
         }
 
         return ComplaintResponse.builder()
                 .id(c.getId())
                 .title(c.getTitle())
-                .status(c.getStatus())
-                .priority(c.getPriority())
                 .category(c.getCategory())
-                .createdAt(c.getCreatedAt())
-                .slaDeadline(c.getSlaDeadline())
-                .wardId(c.getWardId())
-                .wardName(wardName)
-                .assignedOfficialName(officialName)
-                .addressText(c.getAddressText())
+                .priority(c.getPriority())
+                .status(c.getStatus())
                 .latitude(c.getLocation() != null ? c.getLocation().getY() : null)
                 .longitude(c.getLocation() != null ? c.getLocation().getX() : null)
+                .wardId(c.getWardId())
+                .wardName(wardName)
+                .assignedOfficialName(assignedOfficialName)
+                .slaDeadline(c.getSlaDeadline())
+                .addressText(c.getAddressText())
+                .createdAt(c.getCreatedAt())
                 .build();
     }
 
     public ComplaintResponse createComplaint(CreateComplaintRequest request, UUID citizenId) {
         Point location = null;
         if (request.getLongitude() != null && request.getLatitude() != null) {
+            log.info("Filing complaint at: {}, {}", request.getLatitude(), request.getLongitude());
             GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
             location = geometryFactory.createPoint(
                     new Coordinate(request.getLongitude(), request.getLatitude())
             );
         }
 
-        Ward ward = wardRepository.findWardContainingPoint(request.getLatitude(), request.getLongitude())
-                .orElse(null);
+        Ward ward = null;
+        UUID assignedOfficialId = null;
+
+        if(request.getLongitude() != null && request.getLatitude() != null) {
+            List<User> onlineOfficials = userRepository.findOnlineOfficials(ZonedDateTime.now().minusMinutes(30));
+            log.info("Found {} online officials", onlineOfficials.size());
+
+            User nearestOfficial = null;
+            double minDistance = Double.MAX_VALUE;
+
+            for(User official: onlineOfficials) {
+                if(official.getLastLocation() != null) {
+                    double distance = calculateDistance(request.getLatitude(),
+                            request.getLongitude(),
+                            official.getLastLocation().getY(),
+                            official.getLastLocation().getX());
+
+                    log.info("Official {}: distance = {} meters", official.getFullName(), distance);
+
+                    if(distance < 50000 && distance < minDistance) {  // 50km radius
+                        minDistance = distance;
+                        nearestOfficial = official;
+                        log.info("New nearest official: {}", official.getFullName());
+                    }
+                }
+            }
+
+            if(nearestOfficial != null) {
+                assignedOfficialId = nearestOfficial.getId();
+                log.info("✓ Assigned to official: {}", nearestOfficial.getFullName());
+            }
+            else {
+                log.info("✗ No nearby official, assigning to ward");
+                ward = wardRepository.findWardContainingPoint(request.getLatitude(), request.getLongitude()).orElse(null);
+            }
+        }
 
         Complaint complaint = Complaint.builder()
                 .citizenId(citizenId)
@@ -93,32 +149,34 @@ public class ComplaintService {
                 .category(request.getComplaintCategory())
                 .description(request.getDescription())
                 .location(location)
+                .assignedTo(assignedOfficialId)
                 .addressText(request.getAddressText())
                 .wardId(ward != null ? ward.getId() : null)
                 .status(ComplaintStatus.OPEN)
                 .priority(request.getPriority())
-                .slaDeadline(ward != null ?
-                        ZonedDateTime.now().plusHours(ward.getSlaHours()) :
-                        ZonedDateTime.now().plusHours(48))
+                .slaDeadline(ZonedDateTime.now().plusHours(48))  // Always 48h SLA
                 .build();
 
         Complaint savedComplaint = complaintRepository.save(complaint);
 
+        // Send email
         User citizen = userRepository.findById(citizenId).orElse(null);
         if(citizen != null) {
-            String wardName = ward != null ? ward.getName() : null;
-            String officialName = ward != null && ward.getEscalationUserId() != null ? userRepository.findById(ward.getEscalationUserId())
+            String wardName = ward != null ? ward.getName() : "Assigned to nearest official";
+            String officialName = assignedOfficialId != null
+                    ? userRepository.findById(assignedOfficialId).map(User::getFullName).orElse(null)
+                    : (ward != null && ward.getEscalationUserId() != null ? userRepository.findById(ward.getEscalationUserId())
                     .map(User::getFullName)
                     .orElse(null)
-                    : null;
+                    : null);
             emailService.sendComplaintConfirmation(savedComplaint, citizen.getEmail(), wardName, officialName);
         }
 
-        long slaHours = ward != null ? ward.getSlaHours() : 48;
+        // Set Redis SLA
         redisTemplate.opsForValue().set(
                 "sla:" + savedComplaint.getId(),
                 "",
-                Duration.ofHours(slaHours)
+                Duration.ofHours(48)
         );
 
         return mapToResponse(savedComplaint);
@@ -197,9 +255,27 @@ public class ComplaintService {
     }
 
     public List<ComplaintResponse> getOfficialQueue(UUID officialId, UUID wardId) {
-        List<Complaint> complaints = wardId != null
-                ? complaintRepository.findByWardId(wardId)
-                : complaintRepository.findByAssignedTo(officialId);
+        Set<UUID> complaintIds = new HashSet<>();
+        List<Complaint> complaints = new ArrayList<>();
+
+        // First, get directly assigned complaints
+        List<Complaint> directlyAssigned = complaintRepository.findByAssignedTo(officialId);
+        for (Complaint c : directlyAssigned) {
+            if (complaintIds.add(c.getId())) {
+                complaints.add(c);
+            }
+        }
+
+        // Then get ward-based complaints
+        if (wardId != null) {
+            List<Complaint> wardComplaints = complaintRepository.findByWardId(wardId);
+            for (Complaint c : wardComplaints) {
+                if (complaintIds.add(c.getId())) {
+                    complaints.add(c);
+                }
+            }
+        }
+
 
         complaints.sort(Comparator.comparing(
                 Complaint::getSlaDeadline,

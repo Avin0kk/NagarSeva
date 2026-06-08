@@ -64,4 +64,10 @@ public class Complaint {
         this.status = ComplaintStatus.OPEN;
         if (this.priority == null) this.priority = Priority.MEDIUM;
     }
+
+//    @Column(name = "assigned_to")
+//    private UUID assignedTo;
+
+//    @Column(name = "ward_id")
+//    private UUID wardId;
 }

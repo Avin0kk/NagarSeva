@@ -4,8 +4,10 @@ import com.grievanceos.grievance_backend.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+
 import java.time.ZonedDateTime;
 import java.util.UUID;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(name = "users")
@@ -42,6 +44,11 @@ public class User {
     public void prePersist() {
         this.createdAt = ZonedDateTime.now();
     }
+
+    @Column(columnDefinition = "geometry(Point,4326)")
+    private Point lastLocation;
+
+    private ZonedDateTime lastOnlineAt;
 
 //    UUID id;
 //    String email;
