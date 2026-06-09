@@ -21,7 +21,7 @@ export default function Home() {
       .then(res => setRecentResolved(res.data))
       .catch(err => console.error('Error fetching resolved:', err));
     }, []);
-    
+
   return (
     <div className="bg-background text-foreground min-h-screen">
       {/* Navbar */}
@@ -37,6 +37,7 @@ export default function Home() {
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground">Features</a>
             <a href="#how" className="text-sm text-muted-foreground hover:text-foreground">How It Works</a>
             <a href="#map" className="text-sm text-muted-foreground hover:text-foreground">Live Map</a>
+            <a href="/heatmap" className="text-sm text-muted-foreground hover:text-foreground">Heatmap</a>
           </nav>
           <div className="flex items-center gap-2">
             <Link href="/login">

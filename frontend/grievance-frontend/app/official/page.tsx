@@ -30,8 +30,6 @@ export default function OfficialPage() {
         `/complaints/officials/update-location?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`
       );
 
-      console.log('current location {} {}', position.coords.latitude, position.coords.longitude);
-
       const res = await api.get("/complaints/official/queue");
 
       setComplaints(res.data);
