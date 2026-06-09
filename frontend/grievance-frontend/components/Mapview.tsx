@@ -36,16 +36,23 @@ const getIcon = (status: string) => {
   });
 };
 
-export default function MapView() {
+export default function MapView({ initialComplaints} : {initialComplaints?: any[]}) {
   const [complaints, setComplaints] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/complaints/map')
+    if(initialComplaints) {
+      setComplaints(initialComplaints);
+      setLoading(false);
+    } else {
+      api.get('/complaints/map')
       .then(res => setComplaints(res.data))
       .catch(err => console.error('Map fetch error:', err))
       .finally(() => setLoading(false));
-  }, []);
+    }
+
+    
+  }, [initialComplaints]);
 
   if(loading) {
     return <div className="w-full h-96 bg-blue-100">Loading...</div>;
