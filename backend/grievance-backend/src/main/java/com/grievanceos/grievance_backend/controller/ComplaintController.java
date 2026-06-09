@@ -5,6 +5,7 @@ import com.grievanceos.grievance_backend.dto.request.CreateComplaintRequest;
 import com.grievanceos.grievance_backend.dto.request.UpdateComplaintStatusRequest;
 import com.grievanceos.grievance_backend.dto.response.ComplaintResponse;
 import com.grievanceos.grievance_backend.dto.response.MapComplaintResponse;
+import com.grievanceos.grievance_backend.dto.response.WardHeatmapResponse;
 import com.grievanceos.grievance_backend.model.Complaint;
 import com.grievanceos.grievance_backend.model.User;
 import com.grievanceos.grievance_backend.model.Ward;
@@ -120,4 +121,8 @@ public class ComplaintController {
         return ResponseEntity.ok("Location Updated");
     }
 
+    @GetMapping("admin/heatmap")
+    public ResponseEntity<List<WardHeatmapResponse>> getHeatmap() {
+        return ResponseEntity.ok(complaintService.getHeatmap());
+    }
 }

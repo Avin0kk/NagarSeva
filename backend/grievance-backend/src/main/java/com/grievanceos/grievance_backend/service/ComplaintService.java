@@ -4,6 +4,7 @@ import com.grievanceos.grievance_backend.dto.request.CreateComplaintRequest;
 import com.grievanceos.grievance_backend.dto.request.UpdateComplaintStatusRequest;
 import com.grievanceos.grievance_backend.dto.response.ComplaintResponse;
 import com.grievanceos.grievance_backend.dto.response.MapComplaintResponse;
+import com.grievanceos.grievance_backend.dto.response.WardHeatmapResponse;
 import com.grievanceos.grievance_backend.enums.ComplaintStatus;
 import com.grievanceos.grievance_backend.enums.Role;
 import com.grievanceos.grievance_backend.model.Complaint;
@@ -17,6 +18,7 @@ import com.grievanceos.grievance_backend.repository.WardRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -344,5 +346,37 @@ public class ComplaintService {
                 .limit(3)
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    public List<WardHeatmapResponse> getHeatmap() {
+        List<Ward> allWards = wardRepository.findAll();
+
+        return allWards.stream().map(ward -> {
+            List<Complaint> wardComplaints = complaintRepository.findByWardId(ward.getId());
+
+            List<Complaint> unresolved = wardComplaints.stream()
+                    .filter(c -> c.getStatus() != ComplaintStatus.RESOLVED && c.getStatus() != ComplaintStatus.CLOSED)
+                    .toList();
+
+            long totalUnresolved = unresolved.size();
+            long open = unresolved.stream().filter(c -> c.getStatus() == ComplaintStatus.OPEN).count();
+            long inProgress = unresolved.stream().filter(c -> c.getStatus() == ComplaintStatus.IN_PROGRESS).count();
+            long escalated = unresolved.stream().filter(c -> c.getStatus() == ComplaintStatus.ESCALATED).count();
+
+            double maxComplaints = 20;
+            double intensity = Math.min(totalUnresolved/maxComplaints,1.0);
+
+            return WardHeatmapResponse.builder()
+                    .wardId(ward.getId())
+                    .wardName(ward.getName())
+                    .unresolvedCount(totalUnresolved)
+                    .openCount(open)
+                    .inProgressCount(inProgress)
+                    .escalatedCount(escalated)
+                    .latitude(ward.getBoundary().getCentroid().getY())
+                    .longitude(ward.getBoundary().getCentroid().getX())
+                    .intensity(intensity)
+                    .build();
+        }).toList();
     }
 }
