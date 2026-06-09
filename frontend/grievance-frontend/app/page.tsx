@@ -53,75 +53,77 @@ export default function Home() {
 
       <main className="p-12">
         {/* Hero */}
-        <section className="flex items-center gap-12 mb-16">
-          <div className="flex flex-col flex-1 gap-6">
-            <Badge variant="secondary" className="rounded-full px-3 py-1 w-fit">
-              🏛️ Civic Tech for India
-            </Badge>
-            <h1 className="font-bold text-5xl tracking-tight leading-tight">
-              Report civic issues,<br />
-              <span className="text-muted-foreground">get them resolved.</span>
-            </h1>
-            <p className="max-w-xl text-muted-foreground text-lg">
-              GrievanceOS lets citizens file geo-tagged complaints about potholes, power cuts, garbage and more. Officials respond. SLA timers ensure accountability.
-            </p>
-            <div className="flex items-center gap-4">
-              <Link href="/register">
-                <Button className="bg-neutral-900 text-white px-6 gap-2">
-                  File a Complaint <ArrowRight className="size-4" />
-                </Button>
-              </Link>
-              <Link href="/map">
-                <Button variant="outline" className="px-6 gap-2">
-                  <PlayCircle className="size-4" /> View Live Map
-                </Button>
-              </Link>
-            </div>
-            <div className="flex pt-2 items-center gap-8">
-              <div className="flex flex-col">
-                <span className="font-bold text-2xl">48h</span>
-                <span className="text-muted-foreground text-sm">SLA guarantee</span>
-              </div>
-              <Separator orientation="vertical" className="h-10" />
-              <div className="flex flex-col">
-                <span className="font-bold text-2xl">Live</span>
-                <span className="text-muted-foreground text-sm">Map tracking</span>
-              </div>
-              <Separator orientation="vertical" className="h-10" />
-              <div className="flex flex-col">
-                <span className="font-bold text-2xl">Auto</span>
-                <span className="text-muted-foreground text-sm">Escalation</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 flex-1 items-center">
-            <h3 className="font-semibold text-lg text-center">Just Resolved</h3>
-            <div className="space-y-2 w-full">
-             {recentResolved.slice(0, 3).map((complaint: any) => (
-             <Card key={complaint.id} className="shadow-sm">
-              <CardContent className="flex p-3 items-center gap-2">
-               <div className="size-8 rounded-full bg-green-600 text-white flex justify-center items-center flex-shrink-0">
-              <CheckCircle2 className="size-4" />
-               </div>
-              <div className="flex flex-col min-w-0">
-               <span className="font-semibold text-xs truncate">{complaint.title}</span>
-               <span className="text-muted-foreground text-xs">{complaint.wardName}</span>
-              </div>
-              </CardContent>
-             </Card>
-           ))}
+        <section className="flex items-center gap-8 mb-16">
+    {/* Left - Text Content */}
+    <div className="flex flex-col flex-1 gap-6">
+      <Badge variant="secondary" className="rounded-full px-3 py-1 w-fit">
+        🏛️ Civic Tech for India
+      </Badge>
+      <h1 className="font-bold text-5xl tracking-tight leading-tight">
+        Report civic issues,<br />
+        <span className="text-muted-foreground">get them resolved.</span>
+      </h1>
+      <p className="max-w-xl text-muted-foreground text-lg">
+        GrievanceOS lets citizens file geo-tagged complaints about potholes, power cuts, garbage and more. Officials respond. SLA timers ensure accountability.
+      </p>
+      <div className="flex items-center gap-4">
+        <Link href="/register">
+          <Button className="bg-neutral-900 text-white px-6 gap-2">
+            File a Complaint <ArrowRight className="size-4" />
+          </Button>
+        </Link>
+        <Link href="/map">
+          <Button variant="outline" className="px-6 gap-2">
+            <PlayCircle className="size-4" /> View Live Map
+          </Button>
+        </Link>
+      </div>
+      <div className="flex pt-2 items-center gap-8">
+        <div className="flex flex-col">
+          <span className="font-bold text-2xl">48h</span>
+          <span className="text-muted-foreground text-sm">SLA guarantee</span>
+        </div>
+        <Separator orientation="vertical" className="h-10" />
+        <div className="flex flex-col">
+          <span className="font-bold text-2xl">Live</span>
+          <span className="text-muted-foreground text-sm">Map tracking</span>
+        </div>
+        <Separator orientation="vertical" className="h-10" />
+        <div className="flex flex-col">
+          <span className="font-bold text-2xl">Auto</span>
+          <span className="text-muted-foreground text-sm">Escalation</span>
+        </div>
+      </div>
     </div>
-       </div>
 
-          <div className="flex flex-col gap-3 items-center">
-            <div className="rounded-3xl border border-border overflow-hidden bg-muted/70 h-96 w-96">
-              <MapView />
+    {/* Center - Recently Resolved */}
+    <div className="flex flex-col gap-2 flex-1 items-center">
+      <h3 className="font-semibold text-sm">Recently Resolved</h3>
+      {recentResolved.slice(0, 2).map((complaint: any) => (
+        <Card key={complaint.id} className="shadow-sm w-full">
+          <CardContent className="flex p-3 items-center gap-2">
+            <div className="size-8 rounded-full bg-green-600 text-white flex justify-center items-center flex-shrink-0">
+              <CheckCircle2 className="size-4" />
             </div>
-            <p className="text-center text-muted-foreground text-sm font-medium">
-                📍 Live Complaint Map — Real-time geo-tagged issues across Delhi NCR</p>
-          </div>
-        </section>
+            <div className="flex flex-col min-w-0">
+              <span className="font-semibold text-xs truncate">{complaint.title}</span>
+              <span className="text-muted-foreground text-xs">{complaint.wardName}</span>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+
+    {/* Right - Map */}
+    <div className="flex flex-col gap-3 items-center flex-1">
+      <div className="rounded-3xl border border-border overflow-hidden bg-muted/70 h-96 w-96">
+        <MapView />
+      </div>
+      <p className="text-center text-muted-foreground text-sm font-medium">
+        📍 Live Complaint Map
+      </p>
+    </div>
+  </section>
 
         {/* Features */}
         <section id="features" className="flex flex-col gap-8 mb-16">
