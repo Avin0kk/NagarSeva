@@ -1,0 +1,4 @@
+backend/.idea/
+frontend/NagarSeva-frontend/node_modules/
+frontend/NagarSeva-frontend/.next/
+frontend/NagarSeva-frontend/.env.local
