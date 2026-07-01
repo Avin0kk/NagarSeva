@@ -25,6 +25,10 @@ public class AuthService {
             throw new RuntimeException("Email already exists");
         }
 
+        if(!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
+
         User user = User.builder()
                         .fullName(request.getFullName())
                         .email(request.getEmail())
