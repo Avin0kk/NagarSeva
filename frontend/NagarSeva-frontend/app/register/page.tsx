@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageSquareWarning, Phone } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
+import {Eye, EyeOff} from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -18,6 +19,8 @@ export default function RegisterPage() {
   const [role, setRole] = useState('CITIZEN');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = async () => {
     if(!email || !password || !confirmPassword || !fullName || !phone) {
@@ -36,11 +39,20 @@ export default function RegisterPage() {
       router.push('/login');
     }
     catch (e: any) {
+      console.log("hi", e.response?.data);
         setError(e.response?.data?.error || 'Registration failed');
     }
     finally {
         setLoading(false);
     }
+  };
+
+  const passwordChecks = {
+  length: password.length >= 8,
+  uppercase: /[A-Z]/.test(password),
+  lowercase: /[a-z]/.test(password),
+  number: /\d/.test(password),
+  special: /[@$!%*?&]/.test(password),
   };
 
   return (
@@ -93,27 +105,89 @@ export default function RegisterPage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-muted-foreground">Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleRegister()}
-                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
-              />
+              <label className="text-sm font-medium text-muted-foreground">
+                Password
+              </label>
+
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && handleRegister()}
+                  className="w-full border border-border rounded-lg bg-background px-3 py-2.5 pr-10 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
+              <div className="mt-2 text-sm space-y-1">
+                <p className={passwordChecks.length ? "text-green-600" : "text-red-600"}>
+                  {passwordChecks.length ? "✓" : "✗"} At least 8 characters
+                </p>
+
+                <p className={passwordChecks.uppercase ? "text-green-600" : "text-red-600"}>
+                  {passwordChecks.uppercase ? "✓" : "✗"} One uppercase letter
+                </p>
+
+                <p className={passwordChecks.lowercase ? "text-green-600" : "text-red-600"}>
+                  {passwordChecks.lowercase ? "✓" : "✗"} One lowercase letter
+                </p>
+
+                <p className={passwordChecks.number ? "text-green-600" : "text-red-600"}>
+                  {passwordChecks.number ? "✓" : "✗"} One number
+                </p>
+
+                <p className={passwordChecks.special ? "text-green-600" : "text-red-600"}>
+                  {passwordChecks.special ? "✓" : "✗"} One special character
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-muted-foreground">Confirm Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleRegister()}
-                className="border border-border rounded-lg bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
-              />
+              <label className="text-sm font-medium text-muted-foreground">
+                Confirm Password
+              </label>
+
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && handleRegister()}
+                  className="w-full border border-border rounded-lg bg-background px-3 py-2.5 pr-10 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring/70 focus:border-transparent"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
+              {confirmPassword.length > 0 && (
+                <p
+                  className={
+                    password === confirmPassword
+                      ? "text-green-600 text-sm"
+                      : "text-red-600 text-sm"
+                  }
+                >
+                  {password === confirmPassword
+                    ? "✓ Passwords match"
+                    : "✗ Passwords do not match"}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -163,7 +237,6 @@ export default function RegisterPage() {
         </p>
         <div className="absolute top-4 right-4">
         </div>
-
       </div>
     </div>
   );
