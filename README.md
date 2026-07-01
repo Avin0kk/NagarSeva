@@ -25,6 +25,54 @@ Citizens file geo-tagged complaints, officials respond, and SLA timers ensure ac
 
 **Frontend** — Next.js 16 · TypeScript · Tailwind CSS · shadcn/ui · Leaflet · Axios
 
+## Screenshots
+
+### Home Page
+
+![Home](screenshots/home.png)
+
+---
+
+### Login
+
+![Login](screenshots/login.png)
+
+---
+
+### Registration
+
+![Registration](screenshots/register.png)
+
+---
+
+### Citizen Dashboard
+
+![Citizen Dashboard](screenshots/citizen-dashboard.png)
+
+---
+
+### File Complaint
+
+![File Complaint](screenshots/file-complaint.png)
+
+---
+
+### Map View
+
+![Map View](screenshots/map.png)
+
+---
+
+### Admin Dashboard
+
+![Admin Dashboard](screenshots/admin-dashboard.png)
+
+---
+
+### Admin Dashboard with official's profile
+
+![Admin Dashboard](screenshots/admin-dashboard2.png)
+
 ## 🚀 Quick Start
 
 ```bash
